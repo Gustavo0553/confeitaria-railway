@@ -11,11 +11,11 @@ app.use(express.json());
 app.use(express.static('.'));
 
 const pool = mysql.createPool({
-    host: 'sql.freedb.tech',
-    port: '3306',
-    user: 'freedb_confeitariaaa',
-    password: 'A5m3TS@HX3M5c4f',
-    database: 'freedb_confeitaria'
+    host: 'caboose.proxy.rlwy.net',
+    port: '55797',
+    user: 'root',
+    password: 'XqyEbpaIweBqVTkJwFJhnHCIUYtMHhIQ',
+    database: 'railway'
 });
 
 
@@ -25,7 +25,7 @@ app.post('/api/mysql', async (req, res) => {
         switch (tipo) {
             case 'cadastro':
                 var [rows, fields] = await pool.query(
-                    "insert into `freedb_confeitaria`.`tbl_clientes` (`nome`, `login`, `senha`) values (?, ?, ?);",
+                    "insert into `railway`.`tbl_login` (`nome`, `login`, `senha`) values (?, ?, ?);",
                     [nome, login, senha]
                 );
                 if (rows.affectedRows > 0) {
@@ -37,7 +37,7 @@ app.post('/api/mysql', async (req, res) => {
                 case 'login':
                     try {
                         var [rows, fields] = await pool.query(
-                            "select * from `freedb_confeitaria`.`tbl_clientes` where `nome` = ? and `login` = ? and `senha` = ?;",
+                            "select * from `railway`.`tbl_login` where `nome` = ? and `login` = ? and `senha` = ?;",
                             [nome, login, senha]
                         );
                         if (rows.length >= 1) {
@@ -71,7 +71,7 @@ app.post('/api/mysql', async (req, res) => {
                     addAnd = " and ";
                 }
 
-                var strSql = "select * from `freedb_confeitaria`.`tbl_clientes` where" + 
+                var strSql = "select * from `railway`.`tbl_login` where" + 
                     addNome + addAnd + addLogin + ";";
                 var [rows, fields] = await pool.query(strSql);
                 if (rows.length > 0) {
@@ -87,7 +87,7 @@ app.post('/api/mysql', async (req, res) => {
                 }
                 break;
                 case 'atualizacao':
-                    var strSql = "select * from `freedb_confeitaria`.`tbl_clientes`;";
+                    var strSql = "select * from `railway`.`tbl_login`;";
                     var [rows, fields] = await pool.query(strSql);
                     if (rows.length > 0) {
                         res.json({ 
@@ -129,7 +129,7 @@ app.post('/api/mysql', async (req, res) => {
                         addSenha = " , " + addSenha;
                     }
     
-                    var strSql = "update `freedb_confeitaria`.`tbl_clientes` set " + 
+                    var strSql = "update `railway`.`tbl_login` set " + 
                         addNome + addLogin + addSenha + 
                         " where `id` = " + addId + ";";
                     var [rows, fields] = await pool.query(strSql);
@@ -138,7 +138,7 @@ app.post('/api/mysql', async (req, res) => {
                             message: 'Registro atualizado com sucesso!'
                         });
                     } else {
-                        throw ("Não foi possível atualizar o id: " + addId + " na tabela tbl_clientes!");
+                        throw ("Não foi possível atualizar o id: " + addId + " na tabela tbl_login!");
                     }
                     break;
             default:
